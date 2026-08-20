@@ -10,35 +10,47 @@ iframe{display:block;width:100%;height:100%;border:0}
 </style>
 </head>
 <body>
-<iframe id="presentation" src="content.html?v=20260819-1847" title="Положение о регулярных оплатах"></iframe>
+<iframe id="presentation" src="content.html?v=20260820-01" title="Положение о регулярных оплатах"></iframe>
 <script>
-const frame=document.getElementById('presentation');
-const logoUrl=new URL('logo-transparent.png?v=20260819-1847',window.location.href).href;
+const frame = document.getElementById('presentation');
+
+function styleWordmark(el, big){
+  el.textContent = 'Банки.ру';
+  el.style.display = 'inline-block';
+  el.style.whiteSpace = 'nowrap';
+  el.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif';
+  el.style.fontWeight = '800';
+  el.style.letterSpacing = '-0.03em';
+  el.style.color = '#000';
+  el.style.lineHeight = '1';
+  el.style.margin = '0';
+  el.style.padding = '0';
+  el.style.maxWidth = 'none';
+  if (big) {
+    el.style.fontSize = '52px';
+  } else {
+    el.style.fontSize = '24px';
+  }
+}
 
 function fixLogo(){
-  const doc=frame.contentDocument;
+  const doc = frame.contentDocument;
   if(!doc) return;
 
-  const brand=doc.querySelector('.brand-logo');
-  if(brand){
-    brand.removeAttribute('srcset');
-    brand.src=logoUrl;
-    brand.alt='Банки.ру';
-    brand.style.setProperty('height','28px','important');
-    brand.style.setProperty('width','auto','important');
-    brand.style.setProperty('max-width','none','important');
-    brand.style.setProperty('object-fit','contain','important');
+  const smallImg = doc.querySelector('.brand-logo');
+  if (smallImg && !doc.querySelector('.brand-wordmark-replacement-top')) {
+    const smallWordmark = doc.createElement('span');
+    smallWordmark.className = 'brand-wordmark-replacement-top';
+    styleWordmark(smallWordmark, false);
+    smallImg.replaceWith(smallWordmark);
   }
 
-  const big=doc.querySelector('.big-logo img');
-  if(big){
-    big.removeAttribute('srcset');
-    big.src=logoUrl;
-    big.alt='Банки.ру';
-    big.style.setProperty('height','56px','important');
-    big.style.setProperty('width','auto','important');
-    big.style.setProperty('max-width','none','important');
-    big.style.setProperty('object-fit','contain','important');
+  const bigImg = doc.querySelector('.big-logo img');
+  if (bigImg && !doc.querySelector('.brand-wordmark-replacement-big')) {
+    const bigWordmark = doc.createElement('div');
+    bigWordmark.className = 'brand-wordmark-replacement-big';
+    styleWordmark(bigWordmark, true);
+    bigImg.replaceWith(bigWordmark);
   }
 }
 
